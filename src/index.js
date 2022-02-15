@@ -1,14 +1,28 @@
 const express = require('express');
+const morgan = require('morgan');
+const path = require('path');
+
+const{ mongoose } = require('./database');
+
 const app = express();
 
 //Settings
+app.set('port', process.env.PORT || 3000);
 
 //Midlewares
+//nos da imformacion respecto a las peticiones que hagamos
+app.use(morgan('dev'));
+//esta linea comprueba si el dato es un formato json
+app.use(express.json());
 
 //Routes
+app.use('/api/tasks',require('./routes/task.routes'));
 
 //Statin files
+//console.log(path.join(__dirname + '/public'));
+app.use(express.static(path.join(__dirname + '/public')));
 
-app.listen(3000, ()=>{
-    console.log("server on port 3000")
+//Starting the server
+app.listen(app.get('port'), ()=>{
+    console.log(`server on port ${app.get('port')}` )
 });
